@@ -1,6 +1,6 @@
 # Recover
 
-**Recover** is a forensic recovery program written in C that extracts JPEG files from a forensic image. It simulates the process used by forensic investigators to recover deleted files from memory cards by identifying JPEG signatures and writing the recovered files to disk.
+**Recover** is a forensic recovery program written in C that extracts JPEG files from a forensic image. It scans a memory card image file (`card.raw`), identifies JPEG files by their unique signatures, and reconstructs them into separate `.jpg` files. Initially, the directory may appear to have no JPEG images, but once the program runs, recovered images will populate the directory.
 
 ---
 
@@ -37,27 +37,41 @@ The program operates in 512-byte blocks, as memory cards often use a block size 
 
 ---
 
-## 🛠 Implementation
+## 🛠 Installation
 
-The program is implemented in `C` using the following logic:
-- **Validation**:
-  - Ensures exactly one command-line argument is provided.
-  - Checks if the forensic image can be opened for reading.
-- **Memory Management**:
-  - Uses a buffer of 512 bytes to process the forensic image efficiently.
-  - Ensures no memory leaks by properly closing files before exiting.
-- **File Creation**:
-  - Dynamically generates filenames using `sprintf` (e.g., `000.jpg`, `001.jpg`).
-  - Handles file writing with `fwrite`.
+### Install the CS50 Library
+
+Before running the program, ensure you have the **CS50 library** installed. Follow the instructions based on your operating system:
+
+#### Ubuntu
+```bash
+$ curl -s https://packagecloud.io/install/repositories/cs50/repo/script.deb.sh | sudo bash
+$ sudo apt install libcs50
+```
+
+#### Fedora
+```bash
+$ curl -s https://packagecloud.io/install/repositories/cs50/repo/script.rpm.sh | sudo bash
+$ sudo dnf install libcs50
+```
+
+#### From Source (Linux and Mac)
+1. Download the latest release from [CS50 Library Releases](https://github.com/cs50/libcs50/releases).
+2. Extract the downloaded file:
+   ```bash
+   tar -xvf libcs50-*.tar.gz
+   cd libcs50-*
+   sudo make install
+   ```
 
 ---
 
 ## 💻 Usage
 
 ### Compile the Code
-Use the `gcc` compiler to build the program:
+Use the `gcc` compiler to build the program with the CS50 library:
 ```bash
-gcc -o recover recover.c
+gcc -o recover recover.c -lcs50
 ```
 
 ### Run the Program
@@ -66,15 +80,14 @@ Provide the forensic image file (`card.raw`) as an argument:
 ./recover card.raw
 ```
 
-The program will recover all JPEG files from `card.raw` and save them in the current directory.
-
 ---
 
 ## 🧪 Example
 
-**Input**: A forensic image file (`card.raw`) containing JPEG data.  
-**Output**: Recovered files saved as `000.jpg`, `001.jpg`, ..., `049.jpg`.
+**Initial State**:  
+The directory appears empty with no JPEG files.
 
+**After Running the Program**:
 ```bash
 $ ./recover card.raw
 ```
@@ -87,6 +100,8 @@ Recovered files:
 ...
 049.jpg
 ```
+
+These files represent the recovered JPEGs from the forensic image.
 
 ---
 
@@ -141,14 +156,6 @@ Recovered files:
 
 ---
 
-## 🏆 Key Features
-
-- Detects and recovers JPEG files based on signature patterns.
-- Handles contiguous and slack space data to reconstruct files.
-- Outputs neatly numbered files in the current directory.
-
----
-
 ## 🧹 Cleanup
 
 To remove all recovered JPEG files from the directory:
@@ -160,6 +167,7 @@ rm *.jpg
 
 ## 📜 Licensing
 
-This project was developed as part of a CS50 assignment and adheres to its guidelines. 
+This project was developed as part of a CS50 assignment and adheres to its guidelines.
 
 ---
+
