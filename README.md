@@ -19,8 +19,8 @@ The program operates in 512-byte blocks, as memory cards often use a block size 
 ## 🚀 How It Works
 
 1. **Command-Line Input**:
-   - The program requires one command-line argument specifying the forensic image (e.g., card.raw) to process.
-   - Example usage: ./recover card.raw
+   - The program requires one command-line argument specifying the forensic image (e.g., `card.raw`) to process.
+   - Example usage: `./recover card.raw`
 
 2. **File Reading**:
    - The program reads the input file in 512-byte chunks (blocks).
@@ -44,26 +44,35 @@ The program operates in 512-byte blocks, as memory cards often use a block size 
 Before running the program, ensure you have the **CS50 library** installed. Follow the instructions based on your operating system:
 
 #### Ubuntu
-bash
-$ curl -s https://packagecloud.io/install/repositories/cs50/repo/script.deb.sh | sudo bash
-$ sudo apt install libcs50
+```bash
+curl -s https://packagecloud.io/install/repositories/cs50/repo/script.deb.sh | sudo bash
+```
+```bash
+sudo apt install libcs50
+```
 
 
 #### Fedora
-bash
-$ curl -s https://packagecloud.io/install/repositories/cs50/repo/script.rpm.sh | sudo bash
-$ sudo dnf install libcs50
-
+```bash
+curl -s https://packagecloud.io/install/repositories/cs50/repo/script.rpm.sh | sudo bash
+```
+```bash
+sudo dnf install libcs50
+```
 
 #### From Source (Linux and Mac)
 1. Download the latest release from [CS50 Library Releases](https://github.com/cs50/libcs50/releases).
 2. Extract the downloaded file:
    
-bash
-   tar -xvf libcs50-*.tar.gz
-   cd libcs50-*
-   sudo make install
-
+```bash
+tar -xvf libcs50-*.tar.gz
+```
+```bash
+cd libcs50-*
+```
+```bash
+sudo make install
+```
 
 ---
 
@@ -71,15 +80,15 @@ bash
 
 ### Compile the Code
 Use the gcc compiler to build the program with the CS50 library:
-bash
+```bash
 gcc -o recover recover.c -lcs50
-
+```
 
 ### Run the Program
 Provide the forensic image file (card.raw) as an argument:
-bash
+```bash
 ./recover card.raw
-
+```
 
 ---
 
@@ -89,9 +98,9 @@ bash
 The directory appears empty with no JPEG files.
 
 **After Running the Program**:
-bash
+```bash
 $ ./recover card.raw
-
+```
 
 Recovered files:
 000.jpg
@@ -115,26 +124,26 @@ These files represent the recovered JPEGs from the forensic image.
 2. **JPEG Detection**:
    - Identifies the start of a JPEG using the signature:
      
-c
+      ```c
      if (pic[0] == 0xff && pic[1] == 0xd8 && pic[2] == 0xff && (pic[3] & 0xf0) == 0xe0)
-
+      ```
 
 3. **File Management**:
    - Writes data to a new .jpg file each time a JPEG signature is detected:
      
-c
-     sprintf(imagename, "%03i.jpg", jpfound);
-     image = fopen(imagename, "w");
-     fwrite(pic, 512, 1, image);
-
+      ```c
+      sprintf(imagename, "%03i.jpg", jpfound);
+      image = fopen(imagename, "w");
+      fwrite(pic, 512, 1, image);
+      ```
 
 4. **Memory Safety**:
    - Ensures all files are properly closed:
      
-c
-     fclose(image);
-     fclose(memory);
-
+      ```c
+      fclose(image);
+      fclose(memory);
+      ```
 
 ---
 
@@ -142,19 +151,18 @@ c
 
 1. **No Command-Line Argument**:
    - The program will display usage instructions if no arguments or more than one argument is provided:
-     
-bash
+     ```bash
      $ ./recover
      Usage: ./recover image
-
+     ```
 
 2. **Invalid File**:
    - The program will display an error if the input file cannot be opened:
      
-bash
-     $ ./recover missing.raw
-     forensic image cannot be opened
-
+   ```bash
+   $ ./recover missing.raw
+   forensic image cannot be opened
+   ```
 
 3. **End of File**:
    - Ensures all files are closed once the input file has been fully processed.
@@ -164,9 +172,9 @@ bash
 ## 🧹 Cleanup
 
 To remove all recovered JPEG files from the directory:
-bash
+```bash
 rm *.jpg
-
+```
 
 ---
 
